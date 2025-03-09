@@ -1,4 +1,4 @@
-# CISC-352-AI-Project-DeepLearningBY:
+# CISC-352-AI-Project-DeepLearning BY:
 Nicole Hernandez- Student ID: 20329562 -  School Email: 21nhm5@queensu.ca
 Dylan Letts - Student ID: 20323382 - School Email: 21djl11@queensu.ca
 
