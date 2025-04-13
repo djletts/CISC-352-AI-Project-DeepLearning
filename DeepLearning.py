@@ -9,16 +9,26 @@ from sklearn.preprocessing import StandardScaler
 # For the dataset, we will generate 5000 random nonograms
 # Each nonogram will have a 5x5 grid
 list = []
-for i in range(5000):
+
+trials = 5000
+n=5 # Number of rows and columns in the grid
+
+#hyper pearameters variables
+layer1Size=512
+layer2Size=256  
+layer3Size=128
+
+# Generate 5000 random nonograms
+for i in range(trials):
     # Generate a random string of 25 1s and 0s
     string = ''
-    for j in range(25):
+    for j in range(n**2):
         string += str(random.randint(0, 1)) 
-    grid = [[], [], [], [], []]
+    grid = [[] in range(n)] # Create a 5x5 grid
 
     # Split the string into a 5x5 grid
     for i in range(len(string)):
-        grid[i%5].append(int(string[i]))
+        grid[i%n].append(int(string[i]))
     list.append(grid)
 
 
@@ -29,11 +39,11 @@ for grid in list:
     rowList = []
     colList = []
 
-    for i in range(5):
+    for i in range(n):
         # Create the keys for the rows
         keyR = []
         countR = 0
-        for j in range(5):
+        for j in range(n):
             if grid[i][j] == 1:
                 countR += 1
             else:
@@ -49,7 +59,7 @@ for grid in list:
         # Create the keys for the columns
         keyC = []
         countC = 0
-        for j in range(5):
+        for j in range(n):
             if grid[j][i] == 1:
                 countC += 1
             else:
@@ -69,8 +79,14 @@ y = []
 
 # Create the input and output data
 for item in finalList:
-    y.append(item[0][0] + item[0][1] + item[0][2] + item[0][3] + item[0][4])
-    X.append(item[1][0] + item[1][1] + item[1][2] + item[1][3] + item[1][4] + item[2][0] + item[2][1] + item[2][2] + item[2][3] + item[2][4])
+    xSum=0
+    ysum=0
+    for i in range(n):
+        ySum += item[0][i]
+        xSum += item[1][i] + item[2][i]
+
+    y.append(ySum)
+    X.append(xSum)
 X = np.array(X)
 y = np.array(y)
 
@@ -83,10 +99,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Create the model
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(512, activation='relu', input_shape=(X_train.shape[1],)),
-    tf.keras.layers.Dense(256, activation='relu'),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(25, activation='sigmoid')
+    tf.keras.layers.Dense(layer1Size, activation='relu', input_shape=(X_train.shape[1],)),
+    tf.keras.layers.Dense(layer2Size, activation='relu'),
+    tf.keras.layers.Dense(layer3Size, activation='relu'),
+    tf.keras.layers.Dense(n**2, activation='sigmoid')
 ])
 
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
