@@ -24,7 +24,7 @@ for i in range(trials):
     string = ''
     for j in range(n**2):
         string += str(random.randint(0, 1)) 
-    grid = [[] in range(n)] # Create a 5x5 grid
+    grid = [[] for i in range(n)] # Create a 5x5 grid
 
     # Split the string into a 5x5 grid
     for i in range(len(string)):
@@ -79,8 +79,8 @@ y = []
 
 # Create the input and output data
 for item in finalList:
-    xSum=0
-    ysum=0
+    xSum=[]
+    ySum=[]
     for i in range(n):
         ySum += item[0][i]
         xSum += item[1][i] + item[2][i]
@@ -108,7 +108,7 @@ model = tf.keras.Sequential([
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Train the model
-model.fit(X_train, y_train, epochs=500, batch_size=2000, validation_split=0.2)
+model.fit(X_train, y_train, epochs=250, batch_size=2000, validation_split=0.2)
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test)
@@ -117,6 +117,12 @@ print(f'Test loss: {loss}')
 
 # Predict the results for testing
 predictions = model.predict(X_test)
+correct_count = 0
+for i in range(len(predictions)):
+
+    if all(predictions[i].round(0, None) == y_test[i]):
+        correct_count += 1
+print(f'Correct predictions: {correct_count} out of {len(predictions)}')
 mse = mean_squared_error(y_test, predictions)
 print(f'Mean Squared Error: {mse}')
 
