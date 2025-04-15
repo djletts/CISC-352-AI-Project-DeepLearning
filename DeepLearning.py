@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
 
 # For the dataset, we will generate 5000 random nonograms
-# Each nonogram will have a 5x5 grid
+# Each nonogram will have a nxn grid
 list = []
 
 trials = 5000
@@ -22,13 +22,14 @@ layer2Size=256
 
 # Generate 5000 random nonograms
 for i in range(trials):
-    # Generate a random string of 25 1s and 0s
+
+    # Generate a random string of 1s and 0s
     string = ''
     for j in range(n**2):
         string += str(random.randint(0, 1)) 
-    grid = [[] for i in range(n)] # Create a 5x5 grid
+    grid = [[] for i in range(n)] # Create a grid
 
-    # Split the string into a 5x5 grid
+    # Split the string into a grid
     for i in range(len(string)):
         grid[i%n].append(int(string[i]))
     list.append(grid)
@@ -42,6 +43,7 @@ for grid in list:
     colList = []
 
     for i in range(n):
+        
         # Create the keys for the rows
         keyR = []
         countR = 0
@@ -75,6 +77,7 @@ for grid in list:
         colList.append(keyC)
 
         finalList.append([grid, colList, rowList])
+
 # Split the data into initial and goal
 X = []
 y = []
