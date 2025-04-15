@@ -6,9 +6,9 @@ Dylan Letts - Student ID: 20323382 - School Email: 21djl11@queensu.ca
 
 #Getting Started
 ##1.Installation process: All of the libraries used are downloadable through pip.
-##2.Software dependencies: The grid_domain.pddl and planning.pddl are both needed to run 
-##3.Latest releases:N/A
-##4.API references: matplotlib, numpy, tensorflow, sklearn
+##2.Software dependencies: matplotlib, numpy, tensorflow, sklearn 
+##3.Latest releases: N/A
+##4.API references: N/A
 
 #Build and Test
 The file should be able to run without any tampering. Just type in the desired parameters, or hit enter for defaults.
