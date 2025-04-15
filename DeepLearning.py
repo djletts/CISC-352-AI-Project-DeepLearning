@@ -1,5 +1,6 @@
-import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
+from math import *
 import tensorflow as tf
 import random
 from sklearn.model_selection import train_test_split
@@ -11,12 +12,13 @@ from sklearn.preprocessing import StandardScaler
 list = []
 
 trials = 5000
-n=5 # Number of rows and columns in the grid
+n = int(input("Enter the number of columns/rows you want(columns=rows since grid is a square): "))
+epoch = int(input("Enter the number of epochs you want: "))
+ # Number of rows and columns in the grid
 
 #hyper pearameters variables
 layer1Size=512
 layer2Size=256  
-layer3Size=128
 
 # Generate 5000 random nonograms
 for i in range(trials):
@@ -52,7 +54,7 @@ for grid in list:
                 countR = 0
         if countR != 0:
             keyR.append(countR)
-        while len(keyR) < 3:
+        while len(keyR) < ceil(n/2):
             keyR.append(0)
         rowList.append(keyR)     
 
@@ -68,7 +70,7 @@ for grid in list:
                 countC = 0
         if countC != 0:
             keyC.append(countC)
-        while len(keyC) < 3:
+        while len(keyC) < ceil(n/2):
             keyC.append(0)
         colList.append(keyC)
 
@@ -94,6 +96,12 @@ y = np.array(y)
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
+def accuracy(y_true, y_pred):
+    y_true = tf.keras.backend.cast(y_true, tf.keras.backend.floatx())
+    y_pred = tf.keras.backend.cast(y_pred, tf.keras.backend.floatx())
+    return tf.keras.backend.mean(tf.keras.backend.equal(tf.keras.backend.round(y_true), tf.keras.backend.round(y_pred)))
+
+
 # Split the data into training and testing
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -101,14 +109,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model = tf.keras.Sequential([
     tf.keras.layers.Dense(layer1Size, activation='relu', input_shape=(X_train.shape[1],)),
     tf.keras.layers.Dense(layer2Size, activation='relu'),
-    tf.keras.layers.Dense(layer3Size, activation='relu'),
     tf.keras.layers.Dense(n**2, activation='sigmoid')
 ])
 
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[accuracy])
 
 # Train the model
-model.fit(X_train, y_train, epochs=250, batch_size=2000, validation_split=0.2)
+history = model.fit(X_train, y_train, epochs=epoch, batch_size=2000, validation_split=0.2)
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test)
@@ -117,12 +124,14 @@ print(f'Test loss: {loss}')
 
 # Predict the results for testing
 predictions = model.predict(X_test)
-correct_count = 0
-for i in range(len(predictions)):
-
-    if all(predictions[i].round(0, None) == y_test[i]):
-        correct_count += 1
-print(f'Correct predictions: {correct_count} out of {len(predictions)}')
 mse = mean_squared_error(y_test, predictions)
 print(f'Mean Squared Error: {mse}')
-
+plt.figure(0)
+plt.plot(history.history['val_accuracy'])
+plt.ylabel('validation accuracy')
+plt.xlabel('epoch')
+plt.figure(1)
+plt.plot(history.history['val_loss'])
+plt.ylabel('validation loss')
+plt.xlabel('epoch')
+plt.show()
