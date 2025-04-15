@@ -12,8 +12,8 @@ from sklearn.preprocessing import StandardScaler
 list = []
 
 trials = 5000
-n = int(input("Enter the number of columns/rows you want(columns=rows since grid is a square): "))
-epoch = int(input("Enter the number of epochs you want: "))
+n = int(input("Enter the number of columns/rows you want(columns=rows since grid is a square): ").strip() or 5)
+epoch = int(input("Enter the number of epochs you want: ").strip() or 500)
  # Number of rows and columns in the grid
 
 #hyper pearameters variables
